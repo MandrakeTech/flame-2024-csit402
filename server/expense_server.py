@@ -25,7 +25,9 @@ def remote_protocol_handler(message):
     # if response is a number, return it as a string
     # anything else, print the response, and return "internal error"
     if isinstance(response, list):
-        response = '|'.join(response)
+        # response is a list of tuples of (str, int), so convert it to a string array
+        response_arr = [f"{item[0]},{item[1]}" for item in response]
+        response = '|'.join(response_arr)
     elif isinstance(response, int):
         response = str(response)
     else:

@@ -37,9 +37,14 @@ def check_balance(name):
 def list_transactions(name):
   request = f"list|{name}"
   response = send_socket_message(client_socket, request)
-  # if response is a list, return it as a string separated by '|'
-  if isinstance(response, list):
-    response = '|'.join(response)
+  # split the response based on '|'
+  response = response.split('|')
+  # if response[0] has a ",", convert the response to a list of tuples,
+  # otherwise return the response string as is
+  if response[0].find(',')!= -1:
+    response = [(item.split(',')[0], int(item.split(',')[1])) for item in response]
+  else:
+    response = response[0]
 
   return response
 
