@@ -14,6 +14,19 @@ def test_deposit():
     assert check_balance(name) == 100
     assert list_transactions(name) == [('deposit', 100)]
 
+def test_multi_user_deposit():
+    name1 = generateUniqueName()
+    deposit(name1, 100)
+    assert check_balance(name1) == 100
+    assert list_transactions(name1) == [('deposit', 100)]
+    name2 = generateUniqueName()
+    deposit(name2, 100)
+    assert check_balance(name2) == 100
+    assert list_transactions(name2) == [('deposit', 100)]
+    # check user1 again
+    assert check_balance(name1) == 100
+    assert list_transactions(name1) == [('deposit', 100)]
+
 def test_withdraw_sufficient_funds():
     name = generateUniqueName()
     deposit(name, 100)
