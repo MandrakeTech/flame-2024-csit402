@@ -14,8 +14,9 @@ def disconnect_socket_client(client: socket.socket):
   """
   Sends the "exit" command to the server and
   Disconnects the client
-  """  
-  client.close()
+  """
+  if client is not None:
+    client.close()
 
 def send_socket_message(client: socket.socket, message: str):  
   """

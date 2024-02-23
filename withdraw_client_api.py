@@ -5,9 +5,11 @@ client_socket: socket.socket = None # type: ignore
 
 def connect_client():
   global client_socket
-  client_socket = connect_socket_client("localhost", 8082)
+  if client_socket is None:
+    client_socket = connect_socket_client("localhost", 8082)
 
 def withdraw(name, amount):
+  connect_client()
   request = f"withdraw|{name}|{amount}"
   response = send_socket_message(client_socket, request)
   # if response is a numeric string, return that
@@ -17,6 +19,7 @@ def withdraw(name, amount):
   return response
 
 def check_balance(name):
+  connect_client()
   request = f"balance|{name}"
   response = send_socket_message(client_socket, request)
   # if response is a numeric string, return that
@@ -26,6 +29,7 @@ def check_balance(name):
     return f"Invalid balance: {response}"
 
 def list_transactions(name):
+  connect_client()
   request = f"list|{name}"
   response = send_socket_message(client_socket, request)
   # split the response based on '|'
@@ -41,7 +45,8 @@ def list_transactions(name):
 
 def disconnect_client():
   global client_socket
-  send_socket_message(client_socket, "exit")
-  disconnect_socket_client(client_socket)
-  client_socket = None # type: ignore
+  if client_socket is not None:
+    send_socket_message(client_socket, "exit")
+    disconnect_socket_client(client_socket)
+    client_socket = None # type: ignore
   

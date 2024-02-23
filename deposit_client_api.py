@@ -9,6 +9,7 @@ def connect_client():
     client_socket = connect_socket_client("localhost", 8081)
 
 def deposit(name, amount):
+  connect_client()
   request = f"deposit|{name}|{amount}"
   response = send_socket_message(client_socket, request)
   # if response is a numeric string, return that
@@ -18,6 +19,7 @@ def deposit(name, amount):
   return response
 
 def check_balance(name):
+  connect_client()
   request = f"balance|{name}"
   response = send_socket_message(client_socket, request)
   # if response is a numeric string, whether positive or negative, return an int
@@ -27,6 +29,7 @@ def check_balance(name):
     return f"Invalid balance: {response}"
 
 def list_transactions(name):
+  connect_client()
   request = f"list|{name}"
   response = send_socket_message(client_socket, request)
   # split the response based on '|'
@@ -42,7 +45,8 @@ def list_transactions(name):
 
 def disconnect_client():
   global client_socket
-  send_socket_message(client_socket, "exit")
-  disconnect_socket_client(client_socket)
-  client_socket = None
+  if client_socket is not None:
+    send_socket_message(client_socket, "exit")
+    disconnect_socket_client(client_socket)
+    client_socket = None
   
