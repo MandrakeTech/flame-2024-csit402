@@ -1,5 +1,6 @@
 import socket
 from socket_client import connect_socket_client, disconnect_socket_client, send_socket_message
+from tools import deserialize_transaction_list
 
 client_socket: socket.socket = None
 
@@ -8,7 +9,7 @@ def connect_client():
   if client_socket is None:
     client_socket = connect_socket_client("localhost", 8080)
 
-def check_balance(name):
+def check_balance(name) -> int:
   connect_client()
   request = f"balance|{name}"
   response = send_socket_message(client_socket, request)
@@ -18,20 +19,14 @@ def check_balance(name):
   except:
     return f"Invalid balance: {response}"
 
-def list_transactions(name):
+def list_transactions(name) -> list:
   connect_client()
   request = f"list|{name}"
   response = send_socket_message(client_socket, request)
   # split the response based on '|'
-  response = response.split('|')
-  # if response[0] has a ",", convert the response to a list of tuples,
-  # otherwise return the response string as is
-  if response[0].find(',')!= -1:
-    response = [(item.split(',')[0], int(item.split(',')[1])) for item in response]
-  else:
-    response = response[0]
+  transactions = deserialize_transaction_list(response)
 
-  return response
+  return transactions
 
 def disconnect_client():
   global client_socket

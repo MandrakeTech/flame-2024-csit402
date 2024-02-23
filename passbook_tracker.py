@@ -29,10 +29,14 @@ def check_balance(name: str):
 
 def list_transactions(name: str):
     deposit_transactions = list_deposit_transactions(name)
+    print(f"deposit transactions: {deposit_transactions}")
     if isinstance(deposit_transactions, list):
         withdrawal_transactions = list_withdraw_transactions(name)
+        print(f"withdrawal transactions: {withdrawal_transactions}")
         if isinstance(withdrawal_transactions, list):
-            return deposit_transactions + withdrawal_transactions
+            all_transactions = deposit_transactions + withdrawal_transactions
+            print(f"all transactions: {all_transactions}")
+            return all_transactions
     return "error while retreiving transactions"
 
 

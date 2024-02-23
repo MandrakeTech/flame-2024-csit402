@@ -11,5 +11,33 @@
       "program": "${file}",
       "console": "integratedTerminal"
     },
+    {
+      "type": "python",
+      "request": "launch",
+      "name": "Deposit Server",
+      "program": "deposit_server.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "python",
+      "request": "launch",
+      "name": "Withdraw Server",
+      "program": "withdraw_server.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "python",
+      "request": "launch",
+      "name": "PB Server",
+      "program": "passbook_server.py",
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "python",
+      "request": "launch",
+      "name": "Client Tests",
+      "program": "client_tests.py",
+      "console": "integratedTerminal"
+    },
   ]
 }

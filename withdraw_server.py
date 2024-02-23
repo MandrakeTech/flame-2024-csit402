@@ -1,43 +1,15 @@
 
 from socket_server import handle_server_requests, start_socket_server
+from tools import serialize_transaction_list
 from withdraw_tracker import check_balance, list_transactions, withdraw
 
 
 def start_server():
   withdraw_server = start_socket_server(8082)
-  handle_server_requests(withdraw_server, remote_protocol_handler)
-
-def remote_protocol_handler(message):
-    """ 
-      The 'exit; command is already handled by the socker server
-      All other commands need a "name" to work with.
-    """
-    # ensure all surrounding space characters are ignored    
-    message = message.strip()
-    if message == "exit":
-        return "exit"
-
-    args = message.split('|')
-
-    response = handle_expense_client_request(args)
-    
-    # if response is a list, return it as a string separated by '|'
-    # if response is a number, return it as a string
-    # anything else, print the response, and return "internal error"
-    if isinstance(response, list):
-        # response is a list of tuples of (str, int), so convert it to a string array
-        response_arr = [f"{item[0]},{item[1]}" for item in response]
-        response = '|'.join(response_arr)
-    elif isinstance(response, int):
-        response = str(response)
-    else:
-        print(response)
-        response = "internal error"
-        
-    return response
+  handle_server_requests(withdraw_server, handle_expense_client_request)
 
 def handle_expense_client_request(args):
-    command, name, *cmd_params = args
+    command, name, *cmd_params = args.split("|")
     # if name is not supplied, return "invalid command"
     if name == "":
         return "invalid command"
@@ -47,15 +19,20 @@ def handle_expense_client_request(args):
     if len(cmd_params) == 0:
         # these commands work only if amount is not specified
         if command == "balance":
-            return check_balance(name)
+            balance = check_balance(name)
+            return str(balance)
         elif command == "list":
-            return list_transactions(name)
-    elif len(cmd_params) == 1:
-      amount = cmd_params[0]
-      if amount.isdigit():
-        amount = int(amount)
-        if command == "withdraw":
-            return withdraw(name, amount)
+            transactions = list_transactions(name)
+            return serialize_transaction_list(transactions)
+    elif len(cmd_params) == 1:      
+      if command == "withdraw":
+        amount = 0
+        try:
+           amount = cmd_params[0]
+        except:
+           pass
+        balance = withdraw(name, amount)
+        return str(balance)
     
     return f"invalid command and params: {args}"
 
