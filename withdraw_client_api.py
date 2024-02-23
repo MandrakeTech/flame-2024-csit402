@@ -1,20 +1,11 @@
 import socket
 from socket_client import connect_socket_client, disconnect_socket_client, send_socket_message
 
-client_socket: socket.socket = None
+client_socket: socket.socket = None # type: ignore
 
 def connect_client():
   global client_socket
-  client_socket = connect_socket_client("localhost", 8080)
-
-def deposit(name, amount):
-  request = f"deposit|{name}|{amount}"
-  response = send_socket_message(client_socket, request)
-  # if response is a numeric string, return that
-  if response.isdigit():
-    return int(response)
-  
-  return response
+  client_socket = connect_socket_client("localhost", 8082)
 
 def withdraw(name, amount):
   request = f"withdraw|{name}|{amount}"
@@ -29,10 +20,10 @@ def check_balance(name):
   request = f"balance|{name}"
   response = send_socket_message(client_socket, request)
   # if response is a numeric string, return that
-  if response.isdigit():
+  try:
     return int(response)
-  
-  return response
+  except:
+    return f"Invalid balance: {response}"
 
 def list_transactions(name):
   request = f"list|{name}"
@@ -52,5 +43,5 @@ def disconnect_client():
   global client_socket
   send_socket_message(client_socket, "exit")
   disconnect_socket_client(client_socket)
-  client_socket = None
+  client_socket = None # type: ignore
   

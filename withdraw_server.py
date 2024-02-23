@@ -1,11 +1,11 @@
 
 from socket_server import handle_server_requests, start_socket_server
-from expense_tracker import check_balance, deposit, list_transactions, withdraw
+from withdraw_tracker import check_balance, list_transactions, withdraw
 
 
 def start_server():
-  expense_server = start_socket_server(8080)
-  handle_server_requests(expense_server, remote_protocol_handler)
+  withdraw_server = start_socket_server(8082)
+  handle_server_requests(withdraw_server, remote_protocol_handler)
 
 def remote_protocol_handler(message):
     """ 
@@ -54,10 +54,7 @@ def handle_expense_client_request(args):
       amount = cmd_params[0]
       if amount.isdigit():
         amount = int(amount)
-        if command == "deposit":
-            # amount needs to be specified, and it should be numeric
-            return deposit(name, amount)
-        elif command == "withdraw":
+        if command == "withdraw":
             return withdraw(name, amount)
     
     return f"invalid command and params: {args}"

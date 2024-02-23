@@ -1,4 +1,4 @@
-from client.socket_client import check_balance, deposit, list_transactions, withdraw
+from socket_client import check_balance, deposit, list_transactions, withdraw
 
 def main():
     while True:

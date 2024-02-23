@@ -20,7 +20,7 @@ def getUserData(name) -> UserData:
 def withdraw(name: str, amount: int):
     userData = getUserData(name)
 
-    userData.balance -= amount
+    userData.balance += amount
     userData.transactions.append(('withdrawal', amount))
     return userData.balance
 
