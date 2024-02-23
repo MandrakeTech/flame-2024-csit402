@@ -1,8 +1,8 @@
 # Import functions to be tested
-from deposit_client_api import deposit
-from passbook_client_api import connect_client, disconnect_client, check_balance, list_transactions, check_balance
 from tools import generateUniqueName
-from withdraw_client_api import withdraw
+from deposit_client_api import connect_client as connect_deposit_client, disconnect_client as disconnect_deposit_client, deposit
+from passbook_client_api import connect_client as connect_passbook_client, disconnect_client as disconnect_passbook_client, check_balance, list_transactions
+from withdraw_client_api import connect_client as connect_withdraw_client, disconnect_client as disconnecct_withdraw_client, withdraw
 
 def test_deposit():
     name = generateUniqueName()
@@ -79,15 +79,25 @@ def test_list_transactions():
     expected_value = expected_transactions
     assert actual_value == expected_value, f"Expected: {expected_value}, Actual: {actual_value}"
 
+def connect_clients():
+    connect_deposit_client()
+    connect_passbook_client()
+    connect_withdraw_client()
+
+def disconnect_clients():
+    disconnect_deposit_client()
+    disconnecct_withdraw_client()
+    disconnect_passbook_client()
+
 def run_tests():
-    connect_client()
+    connect_clients()
     test_deposit()
     test_multi_user_deposit()
     test_withdraw_sufficient_funds()
     test_withdraw_insufficient_funds()
     test_check_balance()
     # test_list_transactions()
-    disconnect_client()
+    disconnect_clients()
     print("All tests passed!")
 
 if __name__ == "__main__":
