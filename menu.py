@@ -1,4 +1,9 @@
-from client.socket_client import check_balance, deposit, list_transactions, withdraw
+
+
+from deposit_client_api import deposit
+from passbook_client_api import check_balance, list_transactions
+from withdraw_client_api import withdraw
+
 
 def main():
     while True:
@@ -13,13 +18,13 @@ def main():
 
         if choice == '1':
             name = input("Enter account holder name: ")
-            amount = float(input("Enter deposit amount: "))
+            amount = int(input("Enter deposit amount: "))
             deposit(name, amount)
             print("Deposited", amount)
 
         elif choice == '2':
             name = input("Enter account holder name: ")
-            amount = float(input("Enter withdrawal amount: "))
+            amount = int(input("Enter withdrawal amount: "))
             balance = withdraw(name, amount)
             if balance != "Insufficient funds":
               print("Withdrawn", amount)
@@ -30,9 +35,9 @@ def main():
 
         elif choice == '4':
             name = input("Enter account holder name: ")
-            print("Transaction History:")
-            list_transactions(name)
-
+            transactions = list_transactions(name)
+            print(f"Transaction History:{transactions}")
+            
         elif choice == '5':
             print("Exiting...")
             break

@@ -18,10 +18,12 @@ def handle_client(client_socket, handler_function):
             print(f"Connection closed: {client_socket.getpeername()}")
             break
         message = data.decode()  # remove leading and trailing spaces
-        response = handler_function(message)  # Pass message to handler_function
-        if response == "exit":  # Check for "exit" from handler
-            break
-        client_socket.send(response.encode())  # Send response back to client
+        print(f"Received message: [{message}]")
+        if message != "exit":
+            response = handler_function(message)  # Pass message to handler_function
+            if response != "exit":  # Check for "exit" from handler
+                print(f"Sending response: [{response}]")
+                client_socket.send(response.encode())  # Send response back to client
     client_socket.close()  # Close client socket   
 
 def handle_server_requests(server: socket.socket, handler_function):

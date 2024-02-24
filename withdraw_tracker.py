@@ -17,22 +17,12 @@ def getUserData(name) -> UserData:
         bankData[name] = UserData(name, [], 0)
     return bankData[name]
 
-def deposit(name: str, amount: int):
-    userData = getUserData(name)
-    userData.balance += amount
-    userData.transactions.append(('deposit', amount))
-
-    return userData.balance
-
 def withdraw(name: str, amount: int):
     userData = getUserData(name)
 
-    if userData.balance >= amount:
-        userData.balance -= amount
-        userData.transactions.append(('withdrawal', amount))
-        return userData.balance
-    else:
-        return "Insufficient funds"
+    userData.balance += amount
+    userData.transactions.append(('withdrawal', amount))
+    return userData.balance
 
 def check_balance(name: str):
     return getUserData(name).balance
