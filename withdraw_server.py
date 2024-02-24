@@ -1,14 +1,16 @@
 
+from server_lookup import find_server
 from socket_server import handle_server_requests, start_socket_server
 from tools import serialize_transaction_list
 from withdraw_tracker import check_balance, list_transactions, withdraw
 
 
 def start_server():
-  withdraw_server = start_socket_server(8082)
-  handle_server_requests(withdraw_server, handle_expense_client_request)
+    (_, port) = find_server("withdraw")
+    withdraw_server = start_socket_server(port)
+    handle_server_requests(withdraw_server, handle_withdraw_client_request)
 
-def handle_expense_client_request(args):
+def handle_withdraw_client_request(args):
     command, name, *cmd_params = args.split("|")
     # if name is not supplied, return "invalid command"
     if name == "":
@@ -26,15 +28,14 @@ def handle_expense_client_request(args):
             return serialize_transaction_list(transactions)
     elif len(cmd_params) == 1:      
       if command == "withdraw":
-        amount = 0
         try:
-           amount = cmd_params[0]
+           amount = int(cmd_params[0])
+           balance = withdraw(name, amount)
+           return str(balance)
         except:
-           pass
-        balance = withdraw(name, amount)
-        return str(balance)
+           pass                
     
-    return f"invalid command and params: {args}"
+    return f"invalid command and params: [{args}], [{command}][{name}][{cmd_params}]"
 
 if __name__ == "__main__":
     start_server()

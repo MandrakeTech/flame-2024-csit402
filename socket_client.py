@@ -12,7 +12,6 @@ def connect_socket_client(server: str, port: int) -> socket.socket:
 
 def disconnect_socket_client(client: socket.socket):
   """
-  Sends the "exit" command to the server and
   Disconnects the client
   """
   if client is not None:

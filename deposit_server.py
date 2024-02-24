@@ -1,14 +1,18 @@
 
+from server_lookup import find_server
 from socket_server import handle_server_requests, start_socket_server
 from deposit_tracker import check_balance, deposit, list_transactions
 from tools import serialize_transaction_list
 
-
 def start_server():
-  expense_server = start_socket_server(8081)
-  handle_server_requests(expense_server, handle_expense_client_request)
+    server_location = find_server("deposit")
+    print(f"Starting server on {server_location}")
+    (_, port) = server_location
+    deposit_server = start_socket_server(port)
 
-def handle_expense_client_request(args):
+    handle_server_requests(deposit_server, handle_deposit_client_request)
+
+def handle_deposit_client_request(args):
     command, name, *cmd_params = args.split("|")
     # if name is not supplied, return "invalid command"
     if name == "":

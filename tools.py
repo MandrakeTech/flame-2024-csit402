@@ -1,8 +1,12 @@
 import time
 
+counter = 0
+
 def generateUniqueName() -> str:
-    uniq_suffix = int(time.time())
-    generated_name = f"user_{uniq_suffix}"
+    global counter
+    uniq_suffix = int(time.time()*100000)
+    counter += 1
+    generated_name = f"user_{uniq_suffix}_{counter}"
     print(f"Generated name: {generated_name}")
     return generated_name
 
@@ -23,8 +27,14 @@ def deserialize_transaction_list(message: str) -> list:
     if transactions == "":
         return []
     
-    response = transactions.split('~')
-    if response[0].find(',')!= -1:
-        response = [(item.split(',')[0], int(item.split(',')[1])) for item in response]
+    transaction_str_list = transactions.split('~')
+    # convert transaction_str_list into transaction_list
+    # where each item in transaction_str_list, if it has a comma, is a tuple of (str,int)
+    # otherwise ignore item
+    transaction_list = []
+    for item in transaction_str_list:
+        (txn_type, txn_amount_str) = item.split(',')
+        if txn_type!= "" and txn_amount_str!= "":
+            transaction_list.append((txn_type, int(txn_amount_str)))
 
-    return response
+    return transaction_list

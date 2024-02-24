@@ -19,11 +19,11 @@ def handle_client(client_socket, handler_function):
             break
         message = data.decode()  # remove leading and trailing spaces
         print(f"Received message: [{message}]")
-        response = handler_function(message)  # Pass message to handler_function
-        if response == "exit":  # Check for "exit" from handler
-            break
-        print(f"Sending response: [{response}]")
-        client_socket.send(response.encode())  # Send response back to client
+        if message != "exit":
+            response = handler_function(message)  # Pass message to handler_function
+            if response != "exit":  # Check for "exit" from handler
+                print(f"Sending response: [{response}]")
+                client_socket.send(response.encode())  # Send response back to client
     client_socket.close()  # Close client socket   
 
 def handle_server_requests(server: socket.socket, handler_function):

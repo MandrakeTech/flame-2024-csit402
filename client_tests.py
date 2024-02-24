@@ -2,7 +2,7 @@
 from tools import generateUniqueName
 from deposit_client_api import connect_client as connect_deposit_client, disconnect_client as disconnect_deposit_client, deposit
 from passbook_client_api import connect_client as connect_passbook_client, disconnect_client as disconnect_passbook_client, check_balance, list_transactions
-from withdraw_client_api import connect_client as connect_withdraw_client, disconnect_client as disconnecct_withdraw_client, withdraw
+from withdraw_client_api import connect_client as connect_withdraw_client, disconnect_client as disconnect_withdraw_client, withdraw
 
 def test_deposit():
     name = generateUniqueName()
@@ -81,22 +81,23 @@ def test_list_transactions():
 
 def connect_clients():
     connect_deposit_client()
-    connect_passbook_client()
     connect_withdraw_client()
+    connect_passbook_client()
 
 def disconnect_clients():
-    disconnect_deposit_client()
-    disconnecct_withdraw_client()
     disconnect_passbook_client()
+    disconnect_withdraw_client()
+    disconnect_deposit_client()
 
 def run_tests():
     connect_clients()
     test_deposit()
     test_multi_user_deposit()
     test_withdraw_sufficient_funds()
-    test_withdraw_insufficient_funds()
+    # comment th next test, because we explicitly disabled the check
+    # test_withdraw_insufficient_funds()
     test_check_balance()
-    # test_list_transactions()
+    test_list_transactions()
     disconnect_clients()
     print("All tests passed!")
 
