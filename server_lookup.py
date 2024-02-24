@@ -1,4 +1,4 @@
-base_port = 8090
+base_port = 8080
 
 lookup_map = {
   "deposit": ("localhost", base_port),
